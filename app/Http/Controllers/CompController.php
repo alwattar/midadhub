@@ -16,13 +16,30 @@ use App;
 
 class CompController extends Controller
 {
+
+    public function showMissionRequests($miss_id){
+        $miss_requests = DB::table('miss_requests')
+                       ->leftJoin('missions', 'missions.miss_id' , '=', 'miss_requests.miss_req_id')
+                       ->where('missions.miss_comp', Auth::guard('comp')->user()->comp_id)
+                       ->where('miss_requests.miss_miss_id', intval($miss_id))
+                       ->select('missions.*', 'miss_requests.*')
+                       ->get();
+        dd($miss_requests);
+    }
+
+    public function showServiceRequests($serv_id){
+        
+    }
     
     public function compDB(){
         $comp = Auth::guard('comp')->user();
         $countries = Country::all();
         $cities = City::all();
-
+        $services = Service::where('serv_comp', $comp->comp_id)->get();
+        $missions = Mission::where('miss_comp', $comp->comp_id)->get();
         return view('comps.index')
+            ->with('services', $services)
+            ->with('missions', $missions)
             ->with('cities', $cities)
             ->with('countries', $countries)
             ->with('comp', (object) $comp->toArray());

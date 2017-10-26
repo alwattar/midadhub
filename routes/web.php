@@ -41,6 +41,9 @@ Route::post('/upload-cover-comp', ['middleware' => 'comp','uses' => 'CompControl
 Route::get('/compd/settings',['middleware' => 'comp','uses' => 'CompController@settings'])->name('comp.settings');
 Route::get('/comp-register','CompController@register')->name('comp-register');
 Route::post('/comp-register','CompController@registerPost')->name('comp-register');
+// show missions and services requests
+Route::get('/compd/miss-requests/{miss}',['middleware' => 'comp' ,'uses' => 'CompController@showMissionRequests'])->name('miss-requests');
+Route::get('/compd/serv-requests/{serv}',['middleware' => 'comp' ,'uses' => 'CompController@showServiceRequests'])->name('serv-requests');
 // logo miss / service
 Route::post('/upload-serv-logo', ['middleware' => 'comp','uses' => 'CompController@uploadServiceLogo'])->name('service.upload.logo');
 Route::post('/upload-miss-logo', ['middleware' => 'comp','uses' => 'CompController@uploadMissLogo'])->name('miss.upload.logo');

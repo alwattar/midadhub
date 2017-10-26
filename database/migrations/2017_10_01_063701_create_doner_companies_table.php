@@ -20,7 +20,7 @@ class CreateDonerCompaniesTable extends Migration
             $table->string('comp_name_en');
             $table->enum('comp_type', ['org_comp','gov_comp','uni_comp', 'comp_comp']);
             $table->enum('comp_sort', ['doner_comp','bene_comp','both_comp']);
-            $table->string('comp_lnumber');
+            $table->string('comp_lnumber')->nullable();
             $table->string('comp_phone')->nullable();
             $table->string('comp_email')->unique();
             $table->string('comp_password');

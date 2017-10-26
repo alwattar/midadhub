@@ -28,13 +28,13 @@ class CreateUsersTable extends Migration
             $table->string('u_fav_work')->nullable();
 
             // forigns
-            $table->integer('u_country')->unsigned()->index();  // foreign
+            $table->integer('u_country')->unsigned()->index()->nullable();  // foreign
             $table->foreign('u_country')->references('country_id')->on('countries');
 
             $table->integer('u_city')->unsigned()->nullable()->index();  // foreign
             $table->foreign('u_city')->references('city_id')->on('cities');
             
-            $table->integer('u_lang')->unsigned()->index();  // foreign
+            $table->integer('u_lang')->unsigned()->index()->nullable();  // foreign
             $table->foreign('u_lang')->references('lang_id')->on('langs');
             
             /*
@@ -54,7 +54,7 @@ class CreateUsersTable extends Migration
             $table->integer('u_study_lang')->unsigned()->index()->nullable();  // foreign
             $table->foreign('u_study_lang')->references('lang_id')->on('langs');
             
-            $table->integer('u_univ_name')->unsigned()->index();  // foreign
+            $table->integer('u_univ_name')->unsigned()->index()->nullable();  // foreign
             $table->foreign('u_univ_name')->references('univer_id')->on('univers');
 
             $table->integer('u_univ_sec')->unsigned()->nullable()->index();  // foreign
