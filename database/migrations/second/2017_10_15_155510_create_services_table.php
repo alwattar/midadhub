@@ -13,6 +13,7 @@ class CreateServicesTable extends Migration
      */
     public function up()
     {
+        // name , type -> [], 
         Schema::create('services', function (Blueprint $table) {
             $table->increments('serv_id');
             $table->string('serv_name');

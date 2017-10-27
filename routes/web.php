@@ -44,6 +44,9 @@ Route::post('/comp-register','CompController@registerPost')->name('comp-register
 // show missions and services requests
 Route::get('/compd/miss-requests/{miss}',['middleware' => 'comp' ,'uses' => 'CompController@showMissionRequests'])->name('miss-requests');
 Route::get('/compd/serv-requests/{serv}',['middleware' => 'comp' ,'uses' => 'CompController@showServiceRequests'])->name('serv-requests');
+// accept missions and services
+Route::get('/compd/accept-miss/{miss}/{userid}/{proc}',['middleware' => 'comp' ,'uses' => 'CompController@acceptMissionRequest'])->name('accept-miss');
+Route::get('/compd/accept-serv/{serv}/{userid}/{proc}',['middleware' => 'comp' ,'uses' => 'CompController@acceptServiceRequest'])->name('accept-serv');
 // logo miss / service
 Route::post('/upload-serv-logo', ['middleware' => 'comp','uses' => 'CompController@uploadServiceLogo'])->name('service.upload.logo');
 Route::post('/upload-miss-logo', ['middleware' => 'comp','uses' => 'CompController@uploadMissLogo'])->name('miss.upload.logo');

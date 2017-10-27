@@ -10,6 +10,8 @@ use App\City;
 use App\Country;
 use App\Service;
 use App\Mission;
+use App\MissRequests;
+use App\SerRequests;
 use DB;
 use Auth;
 use App;
@@ -17,18 +19,75 @@ use App;
 class CompController extends Controller
 {
 
+    public function acceptMissionRequest($miss_id, $user_id, $proc){
+        if($proc == 'accept'){
+            MissRequests::where('miss_miss_id', intval($miss_id))->where('miss_req_user', intval($user_id))->where('miss_req_status', 'pending')->update([
+                'miss_req_status' => 'accepted'
+            ]);
+        }else{
+            MissRequests::where('miss_miss_id', intval($miss_id))->where('miss_req_user', intval($user_id))->where('miss_req_status', 'pending')->update([
+                'miss_req_status' => 'rejected'
+            ]);
+        }
+
+        return redirect()->back();
+    }
     public function showMissionRequests($miss_id){
-        $miss_requests = DB::table('miss_requests')
-                       ->leftJoin('missions', 'missions.miss_id' , '=', 'miss_requests.miss_req_id')
-                       ->where('missions.miss_comp', Auth::guard('comp')->user()->comp_id)
-                       ->where('miss_requests.miss_miss_id', intval($miss_id))
-                       ->select('missions.*', 'miss_requests.*')
-                       ->get();
-        dd($miss_requests);
+        if(Auth::guard('comp')->user()->comp_sort == 'bene_comp' || Auth::guard('comp')->user()->comp_sort = 'both_comp'){
+            $miss_requests = DB::table('miss_requests')
+                           ->leftJoin('missions', 'missions.miss_id' , '=', 'miss_requests.miss_miss_id')
+                           ->leftJoin('users', 'users.u_id', '=', 'miss_requests.miss_req_user')
+                           ->where('missions.miss_comp', Auth::guard('comp')->user()->comp_id)
+                           ->where('miss_requests.miss_miss_id', intval($miss_id))
+                           ->where('miss_requests.miss_req_status', 'pending')
+                           ->select('missions.*',
+                                    'miss_requests.*',
+                                    'users.u_id',
+                                    'users.u_username',
+                                    'users.u_fname',
+                                    'users.u_lname')
+                           ->get();
+
+            return view('comps.miss-requests')->with('miss_requests', $miss_requests);
+        }else{
+            return redirect()->back();
+        }
     }
 
+    public function acceptServiceRequest($ser_id, $user_id, $proc){
+        if($proc == 'accept'){
+            SerRequests::where('ser_ser_id', intval($ser_id))->where('ser_req_user', intval($user_id))->where('ser_req_status', 'pending')->update([
+                'ser_req_status' => 'accepted'
+            ]);
+        }else{
+            SerRequests::where('ser_ser_id', intval($ser_id))->where('ser_req_user', intval($user_id))->where('ser_req_status', 'pending')->update([
+                'ser_req_status' => 'rejected'
+            ]);
+        }
+
+        return redirect()->back();
+    }
+    
     public function showServiceRequests($serv_id){
+        if(Auth::guard('comp')->user()->comp_sort == 'doner_comp' || Auth::guard('comp')->user()->comp_sort = 'both_comp'){
+        $ser_requests = DB::table('ser_requests')
+                      ->leftJoin('services', 'services.serv_id' , '=', 'ser_requests.ser_ser_id')
+                      ->leftJoin('users', 'users.u_id', '=', 'ser_requests.ser_req_user')
+                      ->where('services.serv_comp', Auth::guard('comp')->user()->comp_id)
+                      ->where('ser_requests.ser_ser_id', intval($serv_id))
+                      ->where('ser_requests.ser_req_status', 'pending')
+                      ->select('services.*',
+                               'ser_requests.*',
+                               'users.u_id',
+                               'users.u_username',
+                               'users.u_fname',
+                               'users.u_lname')
+                      ->get();
         
+        return view('comps.ser-requests')->with('ser_requests', $ser_requests);
+        }else{
+            return redirect()->back();
+        }
     }
     
     public function compDB(){
