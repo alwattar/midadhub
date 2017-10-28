@@ -1,6 +1,4 @@
 @extends('comps.compd')
-
-
 @section('compd_content')
     <script>
      $(document).ready(function(){
@@ -16,6 +14,18 @@
 	     
 	 });
 
+	 $('#stype').on('change', function(){
+	     if($('#stype').val() == 'free'){
+		 $("#serv-percent").hide();
+		 $("#serv-free").show();
+	     }
+	     else if($('#stype').val() == 'percent'){
+		 $("#serv-free").hide();
+		 $("#serv-percent").show();
+	     }
+	     
+	 });
+	 
 	 $("#new-miss").click(function(){
 	     $('.miss-class').toggle()
 	 });

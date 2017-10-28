@@ -31,7 +31,6 @@
     <form id="new-service-form" onsubmit="return false;">
 	<h2>خدمة جديدة</h2>
 	service name <input name="name" type="text" value=""/><br/><br/>
-	service points <input name="points" type="number" value=""/><br/><br/>
 
 	service location <input name="location" type="text" value=""/><br/><br/>
 	service country
@@ -52,7 +51,7 @@
 	<br/>
 	service range
 	<select id="srange" name="range">
-	    <option value="">service range</option>
+	    <option value="0">service range</option>
 	    <option value="0">No</option>
 	    <option value="1">Yes</option>
 	</select>
@@ -62,6 +61,42 @@
 	    service end date <input name="end_date" type="date"/><br/><br/>
 	</div>
 	<br/>
+	<br/>
+	service type
+	<select id="stype" name="stype">
+	    <option value="0">service type</option>
+	    <option value="free">Free</option>
+	    <option value="percent">Percent</option>
+	</select>
+	<br/>
+	<br/>
+	<div id="serv-free" style="display:none">
+	    <br/>
+	    service points <input name="points" type="number" value=""/><br/><br/>
+	    <br/>
+	    <br/>
+	    Point discount new user : <input name="cash_0" type="number"/><br/><br/>
+	    Point discount user lvl 1 : <input name="cash_1" type="number"/><br/><br/>
+	    Point discount user lvl 2 : <input name="cash_2" type="number"/><br/><br/>
+	    Point discount user lvl 3: <input name="cash_3" type="number"/><br/><br/>
+	    Point discount user lvl 4 : <input name="cash_4" type="number"/><br/><br/>
+	    Point discount user lvl 5 : <input name="cash_5" type="number"/><br/><br/>
+	    <br/>
+	</div>
+	<div id="serv-percent" style="display:none">
+	    <br/>
+	    service price <input name="price" type="number" value=""/><br/><br/>
+	    <br/>
+	    <br/>
+	    Percent discount new user : <input name="percent_0" type="number"/><br/><br/>
+	    Percent discount user lvl 1 : <input name="percent_1" type="number"/><br/><br/>
+	    Percent discount user lvl 2 : <input name="percent_2" type="number"/><br/><br/>
+	    Percent discount user lvl 3: <input name="percent_3" type="number"/><br/><br/>
+	    Percent discount user lvl 4 : <input name="percent_4" type="number"/><br/><br/>
+	    Percent discount user lvl 5 : <input name="percent_5" type="number"/><br/><br/>
+	</div>
+	<br/>
+	service description
 	<br/>
 	<textarea cols="30" id="" rows="10" name="desc"></textarea>
 	<br/>

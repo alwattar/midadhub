@@ -14,7 +14,10 @@ use App\Lang;
 use App\StudyClass;
 use App\Univer;
 use App\UniverSection;
-
+use App\Service;
+use App\SerRequests;
+use App\Mission;
+use App\MissRequest;
 class UsersController extends Controller
 {
     
@@ -23,6 +26,44 @@ class UsersController extends Controller
         
     }
 
+
+    public function joinService($serv_id, $comp_id){
+        $exists = SerRequests::where('ser_ser_id' , intval($serv_id))
+                ->where('ser_req_comp', intval($comp_id))
+                ->where('ser_req_user', intval(Auth::user()->u_id))
+                ->first();
+        if(!$exists){
+            SerRequests::insert([
+                'ser_ser_id' => intval($serv_id),
+                'ser_req_token' => bin2hex(random_bytes(10)),
+                'ser_req_comp' => intval($comp_id),
+                'ser_req_user' => intval(Auth::user()->u_id),
+            ]);
+        }
+        return redirect()->back();
+    }
+    
+    public function showServices(){
+        $all_services = DB::table('services')->get();
+        $user_lvl = $this->getUserLvl(Auth::user()->u_points);
+        
+        $getPointsDis = function($p, $d, $l, $e){ $this->getAfterPointsDiscount($p, $d, $l, $e); };
+        $getPercentDis = function($p, $d, $l, $e){ $this->getAfterPercentDiscount($p, $d, $l, $e); };
+        $getServiceStatus = function($serv_id, $comp_id){
+            $res = SerRequests::where('ser_ser_id', intval($serv_id))->where('ser_req_user', intval(Auth::user()->u_id))->where('ser_req_comp', intval($comp_id))->first();
+            if(!$res)
+                return [false, 0];
+            else
+                return [$res->ser_req_status, $res->ser_req_token];
+        };
+        return view('users.show-services')
+            ->with('getSerStatus', $getServiceStatus)
+            ->with('afterPointsDis', $getPointsDis)
+            ->with('afterPercentDis', $getPercentDis)
+            ->with('all_services', $all_services)
+            ->with('user_lvl', $user_lvl);
+    }
+    
     public function updateSettings(Request $req){
         // return $req;
         $username_exists = User::where('u_username', $req->username)->first();

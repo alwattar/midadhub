@@ -70,21 +70,21 @@ class CompController extends Controller
     
     public function showServiceRequests($serv_id){
         if(Auth::guard('comp')->user()->comp_sort == 'doner_comp' || Auth::guard('comp')->user()->comp_sort = 'both_comp'){
-        $ser_requests = DB::table('ser_requests')
-                      ->leftJoin('services', 'services.serv_id' , '=', 'ser_requests.ser_ser_id')
-                      ->leftJoin('users', 'users.u_id', '=', 'ser_requests.ser_req_user')
-                      ->where('services.serv_comp', Auth::guard('comp')->user()->comp_id)
-                      ->where('ser_requests.ser_ser_id', intval($serv_id))
-                      ->where('ser_requests.ser_req_status', 'pending')
-                      ->select('services.*',
-                               'ser_requests.*',
-                               'users.u_id',
-                               'users.u_username',
-                               'users.u_fname',
-                               'users.u_lname')
-                      ->get();
+            $ser_requests = DB::table('ser_requests')
+                          ->leftJoin('services', 'services.serv_id' , '=', 'ser_requests.ser_ser_id')
+                          ->leftJoin('users', 'users.u_id', '=', 'ser_requests.ser_req_user')
+                          ->where('services.serv_comp', Auth::guard('comp')->user()->comp_id)
+                          ->where('ser_requests.ser_ser_id', intval($serv_id))
+                          ->where('ser_requests.ser_req_status', 'pending')
+                          ->select('services.*',
+                                   'ser_requests.*',
+                                   'users.u_id',
+                                   'users.u_username',
+                                   'users.u_fname',
+                                   'users.u_lname')
+                          ->get();
         
-        return view('comps.ser-requests')->with('ser_requests', $ser_requests);
+            return view('comps.ser-requests')->with('ser_requests', $ser_requests);
         }else{
             return redirect()->back();
         }
@@ -185,27 +185,33 @@ class CompController extends Controller
 
     public function newService(Request $rq){
         if(Auth::guard('comp')->user()->comp_sort == 'doner_comp' || Auth::guard('comp')->user()->comp_sort == 'both_comp'){
-        $data = [
-            'serv_name' => $rq->name,
-            'serv_points' => $rq->points,
-            'serv_location' => $rq->location,
-            'serv_country' => $rq->country,
-            'serv_city' => $rq->city,
-            'serv_range' => $rq->range,
-            'serv_desc' => $rq->desc,
-            'serv_comp' => Auth::guard('comp')->user()->comp_id,
-        ];
+            $point_discount = intval($rq->cash_0) . ',' . intval($rq->cash_1) . ',' . intval($rq->cash_2) . ',' . intval($rq->cash_3) . ',' . intval($rq->cash_4) . ',' . intval($rq->cash_5);
+            $percent_discount = intval($rq->percent_0) . ',' . intval($rq->percent_1) . ',' . intval($rq->percent_2) . ',' . intval($rq->percent_3) . ',' . intval($rq->percent_4) . ',' . intval($rq->percent_5);
+            $data = [
+                'serv_name' => $rq->name,
+                'serv_points' => intval($rq->points),
+                'serv_price' => floatval($rq->price),
+                'serv_discount_cash' => $point_discount,
+                'serv_discount_percent' => $percent_discount,
+                'serv_location' => $rq->location,
+                'serv_country' => $rq->country,
+                'serv_city' => $rq->city,
+                'serv_range' => $rq->range,
+                'serv_type' => $rq->stype,
+                'serv_desc' => $rq->desc,
+                'serv_comp' => Auth::guard('comp')->user()->comp_id,
+            ];
 
-        if($rq->range == '1'){
-            $data['serv_start_date'] = $rq->start_date;
-            $data['serv_end_date'] = $rq->end_date;
-        }
+            if($rq->range == '1'){
+                $data['serv_start_date'] = $rq->start_date;
+                $data['serv_end_date'] = $rq->end_date;
+            }
         
-        Service::insert($data);
-        return [
-            'msg' => 'created',
-            'success' => true
-        ];
+            Service::insert($data);
+            return [
+                'msg' => 'created',
+                'success' => true
+            ];
         }else{
             return [
                 'msg' => "Unable to create new service  , you have no permissions",
@@ -227,26 +233,26 @@ class CompController extends Controller
     
     public function newMiss(Request $rq){
         if(Auth::guard('comp')->user()->comp_sort == 'bene_comp' || Auth::guard('comp')->user()->comp_sort == 'both_comp'){
-        $data = [
-            'miss_name' => $rq->name,
-            'miss_points' => $rq->points,
-            'miss_location' => $rq->location,
-            'miss_country' => $rq->country,
-            'miss_city' => $rq->city,
-            'miss_range' => $rq->range,
-            'miss_desc' => $rq->desc,
-            'miss_comp' => Auth::guard('comp')->user()->comp_id,
-        ];
-        if($rq->range == '1'){
-            $data['miss_start_date'] = $rq->start_date;
-            $data['miss_end_date'] = $rq->end_date;
-        }
+            $data = [
+                'miss_name' => $rq->name,
+                'miss_points' => $rq->points,
+                'miss_location' => $rq->location,
+                'miss_country' => $rq->country,
+                'miss_city' => $rq->city,
+                'miss_range' => $rq->range,
+                'miss_desc' => $rq->desc,
+                'miss_comp' => Auth::guard('comp')->user()->comp_id,
+            ];
+            if($rq->range == '1'){
+                $data['miss_start_date'] = $rq->start_date;
+                $data['miss_end_date'] = $rq->end_date;
+            }
 
-        Mission::insert($data);
-        return [
-            'msg' => 'created',
-            'success' => true
-        ];
+            Mission::insert($data);
+            return [
+                'msg' => 'created',
+                'success' => true
+            ];
         }else{
             return [
                 'msg' => "Unable to create new mission  , you have no permissions",
@@ -300,55 +306,55 @@ class CompController extends Controller
 
     public function registerPost(){
         
-            $comp = new Company;
-            $this->validate(request(),[
-                'laccept'=>'required',
-                'comp_name'=>'required|min:4',
-                'comp_name_en'=>'required|min:4',
-                'comp_type'=>'required',
-                'comp_sort'=>'required',
-                'comp_email'=>'required|string|email',
-                'comp_password'=>'required|min:6',
-            ]);
-            if(!isset($errors)){
-                $comps = Company::where('comp_email', request('comp_email'))->get();
+        $comp = new Company;
+        $this->validate(request(),[
+            'laccept'=>'required',
+            'comp_name'=>'required|min:4',
+            'comp_name_en'=>'required|min:4',
+            'comp_type'=>'required',
+            'comp_sort'=>'required',
+            'comp_email'=>'required|string|email',
+            'comp_password'=>'required|min:6',
+        ]);
+        if(!isset($errors)){
+            $comps = Company::where('comp_email', request('comp_email'))->get();
                 
-                if(count($comps) > 0){
-                    $resp = [
-                        "errors" => [
-                            'err1' => "This email already exists!!",
-                        ],
-                        "status" => false,
-                    ];
-                }else{
-                    $comp->insert([
-                        "comp_confirm_code" => '123123',
-                        "comp_name" => request('comp_name'),
-                        "comp_name_en" => request('comp_name_en'),
-                        "comp_type" => request('comp_type'),
-                        "comp_sort" => request('comp_sort'),
-                        "comp_email" => request('comp_email'),
-                        "comp_password" => sha1(request('comp_password')),
-                    ]);
-
-                    $login = Company::where('comp_email', request('comp_email'))->where('comp_password', sha1(request('comp_password')))->first();
-                    Auth::guard('comp')->login($login, false);
-                    
-                    $resp = [
-                        "errors" => [],
-                        "status" => true,
-                        "msg" => "registered!!"
-                    ];
-                }
-            }else{
+            if(count($comps) > 0){
                 $resp = [
-                    "errors" => $errors,
+                    "errors" => [
+                        'err1' => "This email already exists!!",
+                    ],
                     "status" => false,
-                    "msg" => "fields required!"
+                ];
+            }else{
+                $comp->insert([
+                    "comp_confirm_code" => '123123',
+                    "comp_name" => request('comp_name'),
+                    "comp_name_en" => request('comp_name_en'),
+                    "comp_type" => request('comp_type'),
+                    "comp_sort" => request('comp_sort'),
+                    "comp_email" => request('comp_email'),
+                    "comp_password" => sha1(request('comp_password')),
+                ]);
+
+                $login = Company::where('comp_email', request('comp_email'))->where('comp_password', sha1(request('comp_password')))->first();
+                Auth::guard('comp')->login($login, false);
+                    
+                $resp = [
+                    "errors" => [],
+                    "status" => true,
+                    "msg" => "registered!!"
                 ];
             }
+        }else{
+            $resp = [
+                "errors" => $errors,
+                "status" => false,
+                "msg" => "fields required!"
+            ];
+        }
             
-            return $resp;
+        return $resp;
     }
 
     // confirm comp

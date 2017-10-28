@@ -16,6 +16,7 @@ class CreateSerRequestsTable extends Migration
         Schema::create('ser_requests', function (Blueprint $table) {
             $table->increments('ser_req_id');
             $table->timestamp('ser_req_time');
+            $table->string('ser_req_token');
             $table->enum('ser_req_status', ['accepted', 'pending', 'rejected'])->default('pending');
 
             $table->integer('ser_ser_id')->unsigned()->index()->nullable();  // foreign

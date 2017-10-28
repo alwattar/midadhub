@@ -25,6 +25,9 @@ Route::post('/update-user-settings', ['middleware' => 'auth','uses' => 'UsersCon
 Route::post('/upload-pic', ['middleware' => 'auth','uses' => 'UsersController@upload',])->name('user.upload.pic');
 Route::post('/upload-cover', ['middleware' => 'auth','uses' => 'UsersController@uploadCover'])->name('user.upload.cover');
 Route::get('/userd/settings',['middleware' => 'auth','uses' => 'UsersController@settings'])->name('user.settings');
+// services and missions
+Route::get('/userd/show-services',['middleware' => 'auth','uses' => 'UsersController@showServices'])->name('user.show.services');
+Route::get('/userd/join-service/{serv_id}/{comp_id}',['middleware' => 'auth','uses' => 'UsersController@joinService'])->name('user.join.service');
 // users login
 Route::get('/login','UsersController@login')->name('login');
 Route::post('/login',['uses' => 'UsersController@loginPost','as' => 'login.user']);
